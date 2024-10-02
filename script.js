@@ -54,12 +54,24 @@ const Game = (()=>{
         }
         Gameboard.update(index, players[currentplayerindex].mark);
 
-        if(checkforWin(Gameboard.getGBoard(), players[currentplayerindex].mark)){
-            gameover = true;
-            alert(`${players[currentplayerindex].name} won!`)
-        }
+        
 
         currentplayerindex = currentplayerindex ===0 ? 1 : 0;
+        if(checkforWin(Gameboard.getGBoard(), players[currentplayerindex].mark)){
+            gameover = true;
+            setTimeout(function(){
+                alert(`${players[currentplayerindex].name} won!`)
+
+            },400)
+        }
+
+        else if(checkforTie(Gameboard.getGBoard())){
+            gameover = true;
+            setTimeout(function(){
+                alert(`Its a Tie!`)
+
+            },400)
+        }
 
     }
 
@@ -76,7 +88,30 @@ const Game = (()=>{
     
 })();
 
+function checkforWin(board) {
+    const wincombo = [
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,4,8],
+        [2,4,6]
+    ];
+    for(let i=0; i<wincombo.length; i++){
+        const [a,b,c] = wincombo[i];
+        if(board[a] && board[a] === board[b] && board[a] === board[c]){  //board[a] to check if a!=empty because we dont want win with empty cells
+            return true;
+        }
+    }
+    return false;
 
+}
+
+function checkforTie(board){
+    return board.every(cell=>cell!=="")
+}
 
 
 const startButton = document.querySelector("#start-button");
